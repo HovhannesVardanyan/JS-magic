@@ -1,1 +1,2 @@
-Implementation of populare JS constructs such as Promises
+Implementation of populare JS constructs
+  - Promises
