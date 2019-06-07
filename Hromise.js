@@ -93,6 +93,8 @@ class Hromise {
     }
 }
 Hromise.resolve = (val) => {
+    if(val instanceof Hromise)
+        return val;
     return new Hromise(function(resolve, reject){
         resolve(val);
     });
@@ -106,13 +108,20 @@ Hromise.all = (hromises) => {
     if(!hromises || !Array.isArray(hromises))
         throw new Error('Invalid arg');
     const result = [];
-
-   return hromises
-       .reduce(
+    return hromises
+        .reduce(
             (acc, hromise) => acc.then(() => hromise).then(val => result.push(val)),
             Hromise.resolve(1)
         )
         .then(() => result)
 
+};
+Hromise.map = (hromises, mapper) => {
+    if(!hromises || ( !Array.isArray(hromises) && !(hromises instanceof Hromise) ) )
+        throw new Error('Invalid arg');
+    if(Array.isArray(hromises))
+        hromises = Hromise.resolve(hromises);
+
+    return hromises.then(arr => Hromise.all(arr.map(el => Hromise.resolve(el).then(mapper))));
 };
 module.exports = Hromise;
