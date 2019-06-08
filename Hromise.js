@@ -124,4 +124,14 @@ Hromise.map = (hromises, mapper) => {
 
     return hromises.then(arr => Hromise.all(arr.map(el => Hromise.resolve(el).then(mapper))));
 };
+Hromise.each = (hromises, iterator) => {
+    if(!hromises || !Array.isArray(hromises))
+        throw new Error('Invalid arg');
+    return hromises.reduce(
+        (acc, hromise) => acc.then(() => hromise)
+                             .then(val => iterator(val))
+        ,
+        Promise.resolve(1)
+    );
+};
 module.exports = Hromise;
