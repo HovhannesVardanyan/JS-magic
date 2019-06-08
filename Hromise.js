@@ -13,7 +13,8 @@ class Hromise {
                 self.isFulFilled = true;
                 self.resolvedValue = val;
                 if(val instanceof Hromise)
-                    val.then(resolvedVal => invokeResolveHandlers(resolvedVal));
+                    val.then(resolvedVal => resolve(resolvedVal))
+                        .catch(e => reject(e));
                 else
                     setTimeout(() => invokeResolveHandlers(val),0);
             }
@@ -80,7 +81,7 @@ class Hromise {
             });
             self.rejectHandlers.push(function(err){
                 try {
-                    handler(err);
+                    resolve(handler(err));
                 }
                 catch(ex){
                     reject(err);
@@ -131,7 +132,7 @@ Hromise.each = (hromises, iterator) => {
         (acc, hromise) => acc.then(() => hromise)
                              .then(val => iterator(val))
         ,
-        Promise.resolve(1)
+        Hromise.resolve(1)
     );
 };
 Hromise.delay = (miliseconds, val) => {
