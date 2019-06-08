@@ -140,4 +140,11 @@ Hromise.delay = (miliseconds, val) => {
         throw new Error('Invalid arg');
     return new Hromise((resolve, reject) => setTimeout(() => resolve(val),miliseconds));
 };
+Hromise.hromisify = (func) => {
+    return function() {
+        return new Hromise((resolve, reject) => {
+            func(...arguments, (err ,val) => err ? reject(err) : resolve(val));
+        })
+    }
+};
 module.exports = Hromise;
