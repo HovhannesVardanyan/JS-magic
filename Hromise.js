@@ -134,9 +134,9 @@ Hromise.each = (hromises, iterator) => {
         Promise.resolve(1)
     );
 };
-Hromise.delay = (miliseconds) => {
+Hromise.delay = (miliseconds, val) => {
     if(!miliseconds || !miliseconds instanceof Number)
         throw new Error('Invalid arg');
-    return new Hromise((resolve, reject) => setTimeout(resolve,miliseconds));
+    return new Hromise((resolve, reject) => setTimeout(() => resolve(val),miliseconds));
 };
 module.exports = Hromise;
