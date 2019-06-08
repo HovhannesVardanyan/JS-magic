@@ -147,4 +147,12 @@ Hromise.hromisify = (func) => {
         })
     }
 };
+Hromise.hromisifyAll = (obj) => {
+    if(!obj)
+        throw new Error("No arg specified");
+    for (const property in obj)
+        if(obj[property] instanceof Function)
+            obj[property + "Async"] = Hromise.hromisify(obj[property]);
+    return obj;
+};
 module.exports = Hromise;
